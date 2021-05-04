@@ -6,9 +6,6 @@ import { EmptyTable } from '@redhat-cloud-services/frontend-components/EmptyTabl
 import { EmptyStateDisplay } from '../EmptyStateDisplay/EmptyStateDisplay';
 import { CheckCircleIcon } from '@patternfly/react-icons';
 import { TextContent, Text, TextVariants } from '@patternfly/react-core';
-import {
-    global_success_color_100 as successColor
-} from '@patternfly/react-tokens';
 import './RecommendationsTable.scss';
 
 const renderExpandedView = (row) => {
@@ -63,30 +60,35 @@ class RecommendationsTable extends React.Component {
                 ];
             });
         } else {
-            return [];
+            return [
+                {
+                    heightAuto: true,
+                    cells: [
+                        {
+                            props: { colSpan: 7 },
+                            title: <EmptyTable className='recs-table-empty'>
+                                <EmptyStateDisplay title="No recommendations"
+                                    text={['No known recommendations affect this system']}
+                                    icon={CheckCircleIcon}/>
+                            </EmptyTable>
+                        }
+                    ]
+                }
+            ];
         }
     }
 
     render() {
-        if (this.props.recommendations?.length !== 0) {
-            const { columns, rows } = this.state;
-            return (
-                <Table aria-label="Expandable table" onCollapse={this.onCollapse}
-                    variant='compact'
-                    rows={rows} cells={columns} className="ros-recommendations-table">
-                    <TableHeader />
-                    <TableBody />
-                </Table>
-            );
-        } else {
-            return (
-                <EmptyTable>
-                    <EmptyStateDisplay title="No Recommendations"
-                        text={['No known recommendations affect this system']}
-                        icon={CheckCircleIcon} color={ successColor.value } />
-                </EmptyTable>
-            );
-        }
+        const { columns, rows } = this.state;
+        return (
+            <Table aria-label="Expandable table" onCollapse={this.onCollapse}
+                variant='compact'
+                rows={rows} cells={columns} className="ros-recommendations-table">
+                <TableHeader />
+                <TableBody />
+            </Table>
+        );
+
     }
 }
 

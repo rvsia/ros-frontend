@@ -1,4 +1,6 @@
 import React, { Suspense } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 const SystemRecommendations = React.lazy(() => import('./SystemRecommendations'));
 
 /**
@@ -8,10 +10,20 @@ const SystemRecommendations = React.lazy(() => import('./SystemRecommendations')
  * @param props the props given by the smart component.
  */
 
-const SystemDetail = () => (
+const SystemDetail = (props) => (
     <Suspense fallback="">
-        <SystemRecommendations/>
+        <SystemRecommendations inventoryId={ props.rosSystemInfo.inventory_id }/>
     </Suspense>
 );
 
-export default SystemDetail;
+const mapStateToProps = (state) => {
+    return {
+        rosSystemInfo: state.systemDetailReducer?.systemInfo
+    };
+};
+
+SystemDetail.propTypes = {
+    rosSystemInfo: PropTypes.object
+};
+
+export default connect(mapStateToProps, null)(SystemDetail);
